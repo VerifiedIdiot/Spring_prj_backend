@@ -45,9 +45,9 @@ public class Dog {
 
     private int barking;
 
-    private int minLife;
+    private int minLifeExpectancy;
 
-    private int maxLife;
+    private int maxLifeExpectancy;
 
     private int minHeightMale;
 
@@ -65,35 +65,39 @@ public class Dog {
 
     private int maxWeightFemale;
 
-    public static Dog toEntity(DogDto dto) {
-        return Dog.builder()
-//                .id(dto.getId())
-                .name(dto.getName())
-                .imageLink(dto.getImageLink())
-                .goodWithChildren(dto.getGoodWithChildren())
-                .goodWithOtherDogs(dto.getGoodWithOtherDogs())
-                .shedding(dto.getShedding())
-                .grooming(dto.getGrooming())
-                .drooling(dto.getDrooling())
-                .coatLength(dto.getCoatLength())
-                .goodWithStrangers(dto.getGoodWithStrangers())
-                .playfulness(dto.getPlayfulness())
-                .protectiveness(dto.getProtectiveness())
-                .trainability(dto.getTrainability())
-                .energy(dto.getEnergy())
-                .barking(dto.getBarking())
-                .minLife(dto.getMinLifeExpectancy())
-                .maxLife(dto.getMaxLifeExpectancy())
-                .maxHeightMale(dto.getMaxHeightMale())
-                .maxHeightFemale(dto.getMaxHeightFemale())
-                .maxWeightMale(dto.getMaxWeightMale())
-                .maxWeightFemale(dto.getMaxWeightFemale())
-                .minHeightMale(dto.getMinHeightMale())
-                .minHeightFemale(dto.getMinHeightFemale())
-                .minWeightMale(dto.getMinWeightMale())
-                .minWeightFemale(dto.getMinWeightFemale())
+    public DogDto toDto() {
+        return DogDto.builder()
+                .id(this.getId()) // ID 포함 시키는 것에 대해 주의 필요 (컨텍스트에 따라 다름)
+                .name(this.getName())
+                .imageLink(this.getImageLink())
+                .goodWithChildren(this.getGoodWithChildren())
+                .goodWithOtherDogs(this.getGoodWithOtherDogs())
+                .shedding(this.getShedding())
+                .grooming(this.getGrooming())
+                .drooling(this.getDrooling())
+                .coatLength(this.getCoatLength())
+                .goodWithStrangers(this.getGoodWithStrangers())
+                .playfulness(this.getPlayfulness())
+                .protectiveness(this.getProtectiveness())
+                .trainability(this.getTrainability())
+                .energy(this.getEnergy())
+                .barking(this.getBarking())
+                .minLifeExpectancy(this.getMinLifeExpectancy())
+                .maxLifeExpectancy(this.getMaxLifeExpectancy())
+                .minHeightMale(this.getMinHeightMale())
+                .maxHeightMale(this.getMaxHeightMale())
+                .minHeightFemale(this.getMinHeightFemale())
+                .maxHeightFemale(this.getMaxHeightFemale())
+                .minWeightMale(this.getMinWeightMale())
+                .maxWeightMale(this.getMaxWeightMale())
+                .minWeightFemale(this.getMinWeightFemale())
+                .maxWeightFemale(this.getMaxWeightFemale())
                 .build();
     }
+
+
+
+
 
 
 

@@ -1,64 +1,124 @@
 package com.Doggo.DoggoEx.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.Doggo.DoggoEx.dto.View.Views;
+import com.Doggo.DoggoEx.entity.Cat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonView;
+import lombok.*;
 
 @Getter @Setter
 @ToString
 @NoArgsConstructor
-public class CatDto {
-    @JsonIgnore
-    private long id; // DB에서 사용할 ID, JSON 매핑 제외
+@AllArgsConstructor
+@Builder
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CatDto {
+    @JsonView(Views.Public.class)
+    // @JsonIgnore 원래는 제외 대상이었는데 로직변경으로 변동됨
+    private long id;
+
+    // JsonView로 명시해 놓으면 RestController 측 메서드에 해당 어노테이션을
+    // 명시해놓을시 해당 필드만 Json 직렬화 처리됨 개꿀띠
+    @JsonView(Views.Public.class)
     @JsonProperty("name")
     private String name;
 
+    @JsonView(Views.Public.class)
     @JsonProperty("image_link")
     private String imageLink;
+
 
     @JsonProperty("family_friendly")
     private int familyFriendly;
 
+
     @JsonProperty("shedding")
     private int shedding;
+
 
     @JsonProperty("general_health")
     private int generalHealth;
 
+
     @JsonProperty("playfulness")
     private int playfulness;
+
 
     @JsonProperty("children_friendly")
     private int childrenFriendly;
 
+
+    @JsonProperty("stranger_friendly")
+    private int strangerFriendly;
+
+
     @JsonProperty("grooming")
     private int grooming;
+
 
     @JsonProperty("intelligence")
     private int intelligence;
 
+
     @JsonProperty("other_pets_friendly")
     private int otherPetsFriendly;
+
 
     @JsonProperty("min_weight")
     private int minWeight;
 
+
     @JsonProperty("max_weight")
     private int maxWeight;
+
 
     @JsonProperty("min_life_expectancy")
     private int minLifeExpectancy;
 
+
     @JsonProperty("max_life_expectancy")
     private int maxLifeExpectancy;
+
 
     @JsonProperty("origin")
     private String origin;
 
+
     @JsonProperty("length")
     private String length;
+
+    // @Query 어노테이션과 조합하기 위해서는 빌더가 아닌 생성자가 필요하다더라....
+    public CatDto(Long id, String name, String imageLink) {
+        this.id = id;
+        this.name = name;
+        this.imageLink = imageLink;
+
+    }
+
+
+    // builder를 통해서 반복된 getter setter 사용 방지 , @Query 어노테이션이랑 호환 안됨
+    //
+    public Cat toEntity() {
+        return Cat.builder()
+                .name(this.getName())
+                .imageLink(this.getImageLink())
+                .origin((this.getOrigin()))
+                .length(this.getLength())
+                .intelligence(this.getIntelligence())
+                .familyFriendly(this.getFamilyFriendly())
+                .childrenFriendly(this.getChildrenFriendly())
+                .strangerFriendly(this.getStrangerFriendly())
+                .otherPetsFriendly(this.getOtherPetsFriendly())
+                .shedding(this.getShedding())
+                .grooming(this.getGrooming())
+                .generalHealth(this.getGeneralHealth())
+                .playfulness(this.getPlayfulness())
+                .minWeight(this.getMinWeight())
+                .maxWeight(this.getMaxWeight())
+                .minWeight(this.getMinWeight())
+                .maxWeight(this.getMaxWeight())
+                .build();
+    }
 }

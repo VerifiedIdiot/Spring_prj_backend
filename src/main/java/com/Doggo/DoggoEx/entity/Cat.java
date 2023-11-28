@@ -1,8 +1,7 @@
 package com.Doggo.DoggoEx.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.Doggo.DoggoEx.dto.CatDto;
+import lombok.*;
 
 
 import javax.persistence.*;
@@ -11,6 +10,9 @@ import javax.persistence.*;
 @Table(name = "CAT_TB")
 @Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 public class Cat {
     @Id
     @Column(name = "cat_id")
@@ -51,6 +53,27 @@ public class Cat {
 
     private int maxLifeExpectancy;
 
-
+    public CatDto toDto() {
+        return CatDto.builder()
+                .id(this.getId())
+                .name(this.getName())
+                .imageLink(this.getImageLink())
+                .origin((this.getOrigin()))
+                .length(this.getLength())
+                .intelligence(this.getIntelligence())
+                .familyFriendly(this.getFamilyFriendly())
+                .childrenFriendly(this.getChildrenFriendly())
+                .strangerFriendly(this.getStrangerFriendly())
+                .otherPetsFriendly(this.getOtherPetsFriendly())
+                .shedding(this.getShedding())
+                .grooming(this.getGrooming())
+                .generalHealth(this.getGeneralHealth())
+                .playfulness(this.getPlayfulness())
+                .minWeight(this.getMinWeight())
+                .maxWeight(this.getMaxWeight())
+                .minWeight(this.getMinWeight())
+                .maxWeight(this.getMaxWeight())
+                .build();
+    }
 
 }
