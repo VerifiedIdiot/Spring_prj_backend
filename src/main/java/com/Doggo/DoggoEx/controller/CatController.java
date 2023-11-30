@@ -29,17 +29,17 @@ public class CatController {
         this.engToKorService = engToKorService;
     }
 
-    // 필요시에만 INSERT 하시오 , API 허용량 무셔
-    //
-//    @PostMapping("/insert")
-//   public ResponseEntity<?> catInsert() {
-//        try {
-//            catService.insertCats();
-//            return ResponseEntity.ok("애묘도감 테이블 insert");
-//        } catch (Exception e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+//     필요시에만 INSERT 하시오 , API 허용량 무셔
+
+    @PostMapping("/insert")
+   public ResponseEntity<?> catInsert() {
+        try {
+            catService.insertCats();
+            return ResponseEntity.ok("애묘도감 테이블 insert");
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @GetMapping("/detail/{name}")
     //@ PathVariable에서  RequstParam으로 변경 , 주소에 쿼리파라미터로 전달하는게 url에 직접 기입방식보다 간결함

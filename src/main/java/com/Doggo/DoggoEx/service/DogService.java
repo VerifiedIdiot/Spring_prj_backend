@@ -1,9 +1,10 @@
 package com.Doggo.DoggoEx.service;
 
-import com.Doggo.DoggoEx.dto.CatDto;
+
 import com.Doggo.DoggoEx.dto.DogDto;
 import com.Doggo.DoggoEx.entity.Dog;
 import com.Doggo.DoggoEx.repository.DogRepository;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class DogService {
@@ -109,7 +110,7 @@ public class DogService {
         return entityToDogDto(dog);
     }
 
-
+    // 견종 가나다 순으로 정렬
     public List<DogDto> getDogsSortedByKoreanName() {
         return dogRepository.findAllByOrderByNameAsc();
     }

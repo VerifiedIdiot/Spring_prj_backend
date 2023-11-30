@@ -23,7 +23,7 @@ public class EngToKorService {
         catDto.setName(koreanName);
         return catDto;
     }
-    // 수동으로 변환한 견종명들 , 건들면 으르렁
+    // 수동으로 변환한 견종명들 , 고유명사라서 정확도 이슈로 직접함 , 건들면 으르렁
     private static final Map<String, String> dogNameMapping = new HashMap<>();
 
     static {
@@ -316,7 +316,7 @@ public class EngToKorService {
         catNameMapping.put("Birman", "버만");
         catNameMapping.put("British Longhair", "브리티시 롱헤어");
         catNameMapping.put("Chantilly-Tiffany", "샹틸리-티파니");
-        catNameMapping.put("Chartreux", "샤르트뢰");
+        catNameMapping.put("Chartreux", "샤트록스");
         catNameMapping.put("Cymric", "심릭");
         catNameMapping.put("Donskoy", "돈스코이");
         catNameMapping.put("Exotic", "엑조틱");

@@ -16,15 +16,15 @@ public class Weather {
     @Column(unique = true)
     private String region ;
 
-    private int minimum;
+    private int weatherDate;
 
-    private int maximum;
+    private int minTemperature;
 
-    private int air;
+    private int maxTemperature;
 
-    private int wind;
+    private int weatherCondition;
 
-    private int humidity;
+    private int rainPercent;
 
 
 

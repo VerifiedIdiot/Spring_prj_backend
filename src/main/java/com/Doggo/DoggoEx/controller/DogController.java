@@ -1,6 +1,6 @@
 package com.Doggo.DoggoEx.controller;
 
-import com.Doggo.DoggoEx.dto.CatDto;
+
 import com.Doggo.DoggoEx.dto.DogDto;
 import com.Doggo.DoggoEx.dto.View.Views;
 import com.Doggo.DoggoEx.service.DogService;
@@ -66,6 +66,7 @@ public class DogController {
         }
 
     }
+    
 
 
 }
