@@ -37,14 +37,14 @@ public class WeatherDto {
 
 
 
-    public Weather toEntity() {
-        return Weather.builder()
-                .region(this.getRegion())
-                .weatherDate(this.getWeatherDate())
-                .minTemperature((this.getMinTemperature()))
-                .maxTemperature(this.getMaxTemperature())
-                .weatherCondition(this.getWeatherCondition())
-                .rainPercent(this.getRainPercent())
-                .build();
-    }
+//    public Weather toEntity() {
+//        return Weather.builder()
+//                .region(this.getRegion())
+//                .weatherDate(this.getWeatherDate())
+//                .minTemperature((this.getMinTemperature()))
+//                .maxTemperature(this.getMaxTemperature())
+//                .weatherCondition(this.getWeatherCondition())
+//                .rainPercent(this.getRainPercent())
+//                .build();
+//    }
 }

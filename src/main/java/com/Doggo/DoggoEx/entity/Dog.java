@@ -65,6 +65,17 @@ public class Dog {
 
     private int maxWeightFemale;
 
+    @ManyToOne
+    @JoinColumn(name = "animal_type_id")
+    private AnimalType animalType;
+
+    @PostPersist
+    public void postPersist() {
+        if (animalType == null) {
+            animalType = new AnimalType(1); // 영속화 전 기본값 1 설정
+        }
+    }
+
     public DogDto toDto() {
         return DogDto.builder()
                 .id(this.getId()) // ID 포함 시키는 것에 대해 주의 필요 (컨텍스트에 따라 다름)
@@ -94,20 +105,4 @@ public class Dog {
                 .maxWeightFemale(this.getMaxWeightFemale())
                 .build();
     }
-
-
-
-
-
-
-
-
-//    private Date regDate;
-//
-//
-//
-//    @PrePersist // DB에 INSERT 되기 전에 실행되는 메소드
-//    public void prePersist() {
-//        regDate = new Date();
-//    }
 }

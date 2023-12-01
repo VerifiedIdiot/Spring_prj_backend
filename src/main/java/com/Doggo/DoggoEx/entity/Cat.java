@@ -53,6 +53,18 @@ public class Cat {
 
     private int maxLifeExpectancy;
 
+    @ManyToOne
+    @JoinColumn(name = "animal_type_id")
+    private AnimalType animalType;
+
+    @PostPersist
+    public void postPersist() {
+        if (animalType == null) {
+            animalType = new AnimalType(2); // 영속화 전 기본값 2 설정
+        }
+    }
+
+
     public CatDto toDto() {
         return CatDto.builder()
                 .id(this.getId())

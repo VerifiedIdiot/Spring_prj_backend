@@ -1,9 +1,11 @@
 package com.Doggo.DoggoEx.service;
 
-import com.Doggo.DoggoEx.dto.DogDto;
 import com.Doggo.DoggoEx.dto.WeatherDto;
-import com.Doggo.DoggoEx.entity.Dog;
+import com.Doggo.DoggoEx.dto.WeatherEnum;
 import com.Doggo.DoggoEx.repository.WeatherRepository;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -11,9 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +28,8 @@ public class WeatherService {
 
     @Value("${api.weatherLocation.url}")
     private String weatherLocationUrl;
-    @Value("${api.temperature7Days.url}")
-    private String temperature7DaysUrl;
+    @Value("${api.temperature7days.url}")
+    private String temperature7daysUrl;
 
     @Value("${api.weatherApi.key}")
     private String weatherApiKey;
@@ -49,6 +52,7 @@ public class WeatherService {
         // 줄바꿈 기준으로 index에 집어넣는다
         String[] lines = response.getBody().split("\n");
         Map<String, String> locationAndRegCode = new HashMap<>();
+
         for (String line : lines) {
             // 혹시 모를 2칸이상의 공백을 대비해 \\s+ 정규 표현식 사용
             //  공백이 아무리 길어도 하나의 공백으로 취급한다
@@ -59,7 +63,7 @@ public class WeatherService {
                 locationAndRegCode.put(regName, regId);
             }
         }
-        System.out.println(locationAndRegCode);
+//        System.out.println(locationAndRegCode);
         return locationAndRegCode;
     }
 
@@ -71,32 +75,45 @@ public class WeatherService {
         // 포맷 적용
         String dayAfterToday = now.format(formatter);
         // 내일과 7일 후 날짜 계산
-        int tommorow = Integer.parseInt(dayAfterToday) + 1;
-        int sevenDaysAfter = Integer.parseInt(dayAfterToday) + 6;
+        int tomorrow = Integer.parseInt(dayAfterToday) + 1;
+        int sevenDaysAfter = Integer.parseInt(dayAfterToday) + 7;
 
         // HttpHeaders 설정
         HttpHeaders headers = new HttpHeaders();
         headers.set("authKey", weatherApiKey); // 이 부분은 실제 weatherApiKey 변수 값에 따라 달라집니다.
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // HttpEntity 생성
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        // 오브젝트매퍼로 역직렬화를 처리해야 한다
+        ObjectMapper objectMapper = new ObjectMapper();
+        // 결과를 저장할 맵
+        Map<String, List<WeatherDto>> weeklyTemperature = new HashMap<>();
 
-        // UriComponentsBuilder를 사용하여 URL 구성
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(temperature7DaysUrl)
-                .queryParam("reg", locationAndRegCode.get("location")) // locationAndRegCode 맵에서 위치 정보를 가져옵니다.
-                .queryParam("tmef1", tommorow)
-                .queryParam("tmef2", sevenDaysAfter);
+        // WeatherEnum의 모든 값을 순회
+        for (WeatherEnum city : WeatherEnum.values()) {
+            // 해당 도시의 코드 가져오기
+            String regCode = locationAndRegCode.get(city.name());
+//            System.out.println(regCode);
+            // UriComponentsBuilder를 사용하여 URL 구성
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(temperature7daysUrl)
+                    .queryParam("reg", regCode) // 도시 코드를 쿼리 파라미터로 설정
+                    .queryParam("tmef1", tomorrow)
+                    .queryParam("tmef2", sevenDaysAfter)
+                    .queryParam("help", 0);
 
-        // RestTemplate을 사용하여 HTTP 요청 수행
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(), HttpMethod.GET, entity, String.class);
+            // HttpEntity 생성
+            HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        // 응답 데이터를 Map<String, List<WeatherDto>>로 변환하는 로직 필요
-        Map<String, List<WeatherDto>> weeklyWeather = new HashMap<>();
-        // 여기에 응답 데이터를 파싱하여 weeklyWeather 맵에 추가하는 코드를 작성합니다.
+            // RestTemplate을 사용하여 HTTP 요청 수행
+            ResponseEntity<String> response = restTemplate.exchange(
+                    builder.toUriString(), HttpMethod.GET, entity, String.class);
 
-        return weeklyWeather;
+            String[] lines = response.getBody().split("\n");
+
+            System.out.println(Arrays.toString(lines));
+        }
+
+        return weeklyTemperature;
     }
+
 
 }

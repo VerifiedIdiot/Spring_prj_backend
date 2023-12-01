@@ -1,4 +1,5 @@
 package com.Doggo.DoggoEx.controller;
+import com.Doggo.DoggoEx.dto.WeatherDto;
 import com.Doggo.DoggoEx.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -6,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 // 해당 컨트롤러는 파이썬 코드를 읽어내는 파이썬인터프리터를 호출하는 스크립트임
@@ -25,7 +27,8 @@ public class WeatherController {
     public ResponseEntity<?> getForcasts() {
         try {
             Map<String, String> locationAndRegCode = weatherService.getWeatherLocation();
-            return ResponseEntity.ok(locationAndRegCode);
+            Map<String, List<WeatherDto>> weeklyTemperature = weatherService.getWeatherTemp(locationAndRegCode);
+            return ResponseEntity.ok(weeklyTemperature);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
