@@ -1,6 +1,7 @@
 package com.Doggo.DoggoEx.dto;
 
 import com.Doggo.DoggoEx.dto.View.Views;
+import com.Doggo.DoggoEx.entity.AnimalType;
 import com.Doggo.DoggoEx.entity.Cat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -89,6 +90,8 @@ public class CatDto {
     @JsonProperty("length")
     private String length;
 
+    private AnimalType animalType;
+
     // @Query 어노테이션과 조합하기 위해서는 빌더가 아닌 생성자가 필요하다더라....
     public CatDto(Long id, String name, String imageLink) {
         this.id = id;
@@ -103,6 +106,7 @@ public class CatDto {
     public Cat toEntity() {
         return Cat.builder()
                 .name(this.getName())
+                .animalTypeId(this.getAnimalType())
                 .imageLink(this.getImageLink())
                 .origin((this.getOrigin()))
                 .length(this.getLength())
@@ -119,6 +123,7 @@ public class CatDto {
                 .maxWeight(this.getMaxWeight())
                 .minWeight(this.getMinWeight())
                 .maxWeight(this.getMaxWeight())
+
                 .build();
     }
 }

@@ -2,9 +2,10 @@ package com.Doggo.DoggoEx.service;
 
 
 import com.Doggo.DoggoEx.dto.DogDto;
+import com.Doggo.DoggoEx.entity.AnimalType;
 import com.Doggo.DoggoEx.entity.Dog;
+import com.Doggo.DoggoEx.repository.AnimalTypeRepository;
 import com.Doggo.DoggoEx.repository.DogRepository;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -18,6 +19,8 @@ import java.util.List;
 public class DogService {
 
     private final DogRepository dogRepository;
+
+    private final AnimalTypeRepository animalTypeRepository;
     private final RestTemplate restTemplate;
 
     @Value("${api.dog.url}")
@@ -28,14 +31,17 @@ public class DogService {
 
     // 생성자를 통한 DogRepository 주입 및 RestTemplate 초기화
     @Autowired
-    public DogService(DogRepository dogRepository) {
+    public DogService(DogRepository dogRepository, AnimalTypeRepository animalTypeRepository) {
         this.dogRepository = dogRepository;
+        this.animalTypeRepository = animalTypeRepository;
         this.restTemplate = new RestTemplate();
     }
 
     // dto에 담긴 데이터를 빌더를 이용해 엔티티로 전달하는 메서드
-    private Dog mapToDogEntity(DogDto dogDto) {
-        return dogDto.toEntity();
+    private Dog mapToDogEntity(DogDto dogDto, AnimalType dogType) {
+        Dog dog = dogDto.toEntity();
+        dog.setAnimalTypeId(dogType);   // 여기에서 AnimalType을 설정 , ID 1 의 레코드 할당
+        return dog;
     }
 
     // 엔티티에 담긴 데이터를 빌더를 이용해 dto로 전달하는 메서드
@@ -55,6 +61,9 @@ public class DogService {
 
         // 헤더를 포함한 HTTP 엔티티를 생성합니다.
         HttpEntity<String> entity = new HttpEntity<>(headers);
+        // id 값이 1인 레코드를 찾는 리퍼지토리
+        AnimalType dogType = animalTypeRepository.findById(1L)
+                .orElseThrow(() -> new RuntimeException("Animal type CAT not found"));
 
         // 개 짖음의 강도가 1에서 5까지 있다고 가정하고, 각각의 강도에 대한 정보를 가져오는 반복문을 시작합니다.
         for (int barking = 1; barking <= 5; barking++) {
@@ -85,7 +94,7 @@ public class DogService {
                     // 응답 배열을 순회하면서 각 `DogDto` 객체를 `Dog` 엔티티로 변환하고 저장합니다.
                     for (DogDto dogDto : response) {
                         // DogDto 객체를 Dog 엔티티로 매핑하는 메서드를 호출합니다.
-                        Dog dog = mapToDogEntity(dogDto);
+                        Dog dog = mapToDogEntity(dogDto, dogType);
                         // 변환된 Dog 엔티티를 리포지토리를 통해 데이터베이스에 저장합니다.
                         dogRepository.save(dog);
                         // 저장된 강아지 정보를 콘솔에 출력합니다.

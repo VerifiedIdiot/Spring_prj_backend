@@ -1,6 +1,5 @@
 package com.Doggo.DoggoEx.controller;
-import com.Doggo.DoggoEx.dto.WeatherDto;
-import com.Doggo.DoggoEx.service.WeatherService;
+import com.Doggo.DoggoEx.service.weather.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,10 +23,10 @@ public class WeatherController {
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<?> getForcasts() {
+    public ResponseEntity<?> getForcast() {
         try {
             Map<String, String> locationAndRegCode = weatherService.getWeatherLocation();
-            Map<String, List<WeatherDto>> weeklyTemperature = weatherService.getWeatherTemp(locationAndRegCode);
+            Map<String, List<List<String>>> weeklyTemperature = weatherService.getWeatherTemp(locationAndRegCode);
             return ResponseEntity.ok(weeklyTemperature);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

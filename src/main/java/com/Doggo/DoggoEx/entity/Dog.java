@@ -5,7 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "DOG_TB")
+@Table(name = "dog_tb")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,6 +16,11 @@ public class Dog {
     @Column(name = "dog_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dog_seq")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "animalTypeId", referencedColumnName = "animalTypeId")
+    private AnimalType animalTypeId;
+
     @Column(unique = true)
     private String name;
 
@@ -65,16 +70,8 @@ public class Dog {
 
     private int maxWeightFemale;
 
-    @ManyToOne
-    @JoinColumn(name = "animal_type_id")
-    private AnimalType animalType;
 
-    @PostPersist
-    public void postPersist() {
-        if (animalType == null) {
-            animalType = new AnimalType(1); // 영속화 전 기본값 1 설정
-        }
-    }
+
 
     public DogDto toDto() {
         return DogDto.builder()

@@ -7,22 +7,26 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "ANIMAL_TYPE_TB")
+@Table(name = "animal_type_tb")
 public class AnimalType {
     @Id
-    @Column(name = "animal_type_id")
+    @Column(name = "animalTypeId")
     private Long id;
 
+
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "animal_type")
+    @Column(name = "animalType")
     private AnimalTypes animalType;
+
+
 
     public enum AnimalTypes {
         DOG,
@@ -31,6 +35,8 @@ public class AnimalType {
     public AnimalType(long id) {
         this.id = id;
     }
+
+
 }
 
 

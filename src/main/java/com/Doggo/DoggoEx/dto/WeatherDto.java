@@ -17,11 +17,8 @@ import java.util.Map;
 @Builder
 public class WeatherDto {
 
-    // @JsonIgnore 원래는 제외 대상이었는데 로직변경으로 변동됨
-    private long id;
 
-    // JsonView로 명시해 놓으면 RestController 측 메서드에 해당 어노테이션을
-    // 명시해놓을시 해당 필드만 Json 직렬화 처리됨 개꿀띠
+    private long id;
 
     private Map<String, String> region;
 

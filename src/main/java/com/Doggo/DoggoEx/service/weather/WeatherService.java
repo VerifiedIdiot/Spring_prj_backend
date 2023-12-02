@@ -1,4 +1,4 @@
-package com.Doggo.DoggoEx.service;
+package com.Doggo.DoggoEx.service.weather;
 
 import com.Doggo.DoggoEx.dto.WeatherDto;
 import com.Doggo.DoggoEx.dto.WeatherEnum;
@@ -16,10 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @Service
 public class WeatherService {
 
@@ -41,6 +39,7 @@ public class WeatherService {
 
     // 기상청에서 지역별 코드를 구해오는 메서드
     public Map<String, String> getWeatherLocation() {
+
         HttpHeaders headers = new HttpHeaders();
         headers.set("authKey", weatherApiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -66,31 +65,29 @@ public class WeatherService {
 //        System.out.println(locationAndRegCode);
         return locationAndRegCode;
     }
-
-    public Map<String, List<WeatherDto>> getWeatherTemp(Map<String, String> locationAndRegCode) {
+    // 가져온 지역별 코드를 활용해서 중기별 최저온도 , 최고온도를 구하는 메서드 ,
+    public Map<String, List<List<String>>> getWeatherTemp(Map<String, String> locationAndRegCode) {
         // 현재 날짜 구하기
         LocalDate now = LocalDate.now();
         // 포맷 정의
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         // 포맷 적용
-        String dayAfterToday = now.format(formatter);
+        String Today = now.format(formatter);
         // 내일과 7일 후 날짜 계산
-        int tomorrow = Integer.parseInt(dayAfterToday) + 1;
-        int sevenDaysAfter = Integer.parseInt(dayAfterToday) + 7;
+        int tomorrow = Integer.parseInt(Today) + 1;
+        int sevenDaysAfter = Integer.parseInt(Today) + 7;
 
         // HttpHeaders 설정
         HttpHeaders headers = new HttpHeaders();
         headers.set("authKey", weatherApiKey); // 이 부분은 실제 weatherApiKey 변수 값에 따라 달라집니다.
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // 오브젝트매퍼로 역직렬화를 처리해야 한다
-        ObjectMapper objectMapper = new ObjectMapper();
         // 결과를 저장할 맵
-        Map<String, List<WeatherDto>> weeklyTemperature = new HashMap<>();
+        Map<String, List<List<String>>> weeklyTemperature = new HashMap<>();
 
         // WeatherEnum의 모든 값을 순회
         for (WeatherEnum city : WeatherEnum.values()) {
-            // 해당 도시의 코드 가져오기
+            // 해당 도시의 코드 가져오기 , city의 값과 일치하는 locationAndRegCode의 key를 매핑
             String regCode = locationAndRegCode.get(city.name());
 //            System.out.println(regCode);
             // UriComponentsBuilder를 사용하여 URL 구성
@@ -109,11 +106,37 @@ public class WeatherService {
 
             String[] lines = response.getBody().split("\n");
 
-            System.out.println(Arrays.toString(lines));
+            String[] filterLines = Arrays.copyOfRange(lines, 2, lines.length - 1);
+
+
+
+            List<List<String>> cityWeather = new ArrayList<>();
+
+            for (String index : filterLines) {
+                String[] targets = index.split("\\s+");
+
+                List<String> dailyTemp = new ArrayList<>();
+
+                String date = targets[2].substring(0,8); // 날짜 추출
+                String minTemp = targets[6]; // 최저날씨
+                String maxTemp = targets[7]; // 최고날씨
+
+                dailyTemp.add(date);
+                dailyTemp.add(minTemp);
+                dailyTemp.add(maxTemp);
+                cityWeather.add(dailyTemp);
+
+            }
+            weeklyTemperature.put(city.name(), cityWeather);
         }
 
         return weeklyTemperature;
     }
+
+
+//    public Map<String, List<List<String>>> getWeatherCondition(Map<String, String> locationAndRegCode) {
+//
+//    }
 
 
 }
