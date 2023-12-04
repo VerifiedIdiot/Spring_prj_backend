@@ -17,17 +17,19 @@ import java.util.Map;
 public class WeatherController {
 
     private final WeatherService weatherService;
-    @Autowired
+
     public WeatherController(WeatherService weatherService) {
         this.weatherService = weatherService;
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<?> getForcast() {
+    public ResponseEntity<?> getForcasts() {
         try {
-            Map<String, String> locationAndRegCode = weatherService.getWeatherLocation();
-            Map<String, List<List<String>>> weeklyTemperature = weatherService.getWeatherTemp(locationAndRegCode);
-            return ResponseEntity.ok(weeklyTemperature);
+            Map<String, String> locationCode = weatherService.getLocationCode();
+            Map<String, List<List<String>>> middleTemp = weatherService.getMiddleTemp(locationCode);
+            Map<String, List<List<String>>> middleCondition = weatherService.getMiddleCondition(locationCode);
+//            Map<String, List<List<String>>> completeMiddle = weatherService.getCompleteMiddle(middleTemp,middleCondition);
+            return ResponseEntity.ok(middleTemp);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }

@@ -5,12 +5,14 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
-@Table(name = "PET_PROFILE_TB")
+@Table(name = "pet_profile_tb")
 public class PetProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pet_profile_seq")
     private Long id;
-
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
     @ManyToOne
     @JoinColumn(name = "animal_type_id")
     private AnimalType animalType; // 동물의 종류 (Enum 참조)

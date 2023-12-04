@@ -32,7 +32,7 @@ public class CatService {
 
 
     // 생성자를 통한 CatRepository 주입 및 RestTemplate 초기화
-    @Autowired
+
     public CatService(CatRepository catRepository, AnimalTypeRepository animalTypeRepository) { // 여기에 AnimalTypeRepository를 주입합니다.
         this.catRepository = catRepository;
         this.animalTypeRepository = animalTypeRepository; // 이 라인을 추가해야 합니다.

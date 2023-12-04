@@ -30,7 +30,7 @@ public class DogService {
     private String apiKey;
 
     // 생성자를 통한 DogRepository 주입 및 RestTemplate 초기화
-    @Autowired
+
     public DogService(DogRepository dogRepository, AnimalTypeRepository animalTypeRepository) {
         this.dogRepository = dogRepository;
         this.animalTypeRepository = animalTypeRepository;

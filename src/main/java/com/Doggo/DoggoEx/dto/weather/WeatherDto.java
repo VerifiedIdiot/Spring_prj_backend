@@ -1,4 +1,4 @@
-package com.Doggo.DoggoEx.dto;
+package com.Doggo.DoggoEx.dto.weather;
 
 
 import com.Doggo.DoggoEx.dto.View.Views;

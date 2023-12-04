@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class WeatherAbstract {
+public abstract class WeatherAbstract {
 
     protected RestTemplate restTemplate;
 
@@ -40,12 +40,12 @@ public class WeatherAbstract {
     protected Map<String, Integer> getDateParameters() {
         LocalDate now = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String today = now.format(formatter);
-        int tomorrow = Integer.parseInt(today) + 1;
-        int sevenDaysAfter = Integer.parseInt(today) + 7;
+        int today = Integer.parseInt(now.format(formatter));
+        int tomorrow = today + 1;
+        int sevenDaysAfter = today + 7;
 
         Map<String, Integer> dateParams = new HashMap<>();
-        dateParams.put("today", Integer.parseInt(today));
+        dateParams.put("today", today);
         dateParams.put("tomorrow", tomorrow);
         dateParams.put("sevenDaysAfter", sevenDaysAfter);
 

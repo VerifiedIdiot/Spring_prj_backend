@@ -20,7 +20,7 @@ public class DogController {
 
     private final DogService dogService;
     private final EngToKorService engToKorService;
-    @Autowired
+
     public DogController(DogService dogService, EngToKorService engToKorService) {
         this.dogService = dogService;
         this.engToKorService = engToKorService;

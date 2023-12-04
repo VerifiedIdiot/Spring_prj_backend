@@ -1,9 +1,7 @@
 package com.Doggo.DoggoEx.controller;
 
 import com.Doggo.DoggoEx.dto.CatDto;
-import com.Doggo.DoggoEx.dto.DogDto;
 import com.Doggo.DoggoEx.dto.View.Views;
-import com.Doggo.DoggoEx.entity.Cat;
 import com.Doggo.DoggoEx.service.CatService;
 import com.Doggo.DoggoEx.service.EngToKorService;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -22,7 +20,7 @@ public class CatController {
     private final CatService catService;
     private final EngToKorService engToKorService;
 
-    @Autowired
+
     public CatController(CatService catService, EngToKorService engToKorService) {
 
         this.catService = catService;
