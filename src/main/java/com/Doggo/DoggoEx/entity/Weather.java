@@ -2,11 +2,10 @@ package com.Doggo.DoggoEx.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Table(name = "weather_tb")
+@Table(name = "WEATHER_TB")
 @Getter @Setter
 @NoArgsConstructor
 public class Weather {
@@ -28,13 +27,16 @@ public class Weather {
     private int rainPercent;
 
 
-    private LocalDateTime regDate;
+
+
+
+
+    private Date regDate;
 
 
 
     @PrePersist // DB에 INSERT 되기 전에 실행되는 메소드
     public void prePersist() {
-
-        regDate = LocalDateTime.now();
+        regDate = new Date();
     }
 }
