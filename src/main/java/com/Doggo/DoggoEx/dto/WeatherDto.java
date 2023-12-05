@@ -1,24 +1,22 @@
-package com.Doggo.DoggoEx.entity;
-import com.Doggo.DoggoEx.dto.WeatherDto;
+package com.Doggo.DoggoEx.dto;
+
+
+import com.Doggo.DoggoEx.entity.Weather;
 import lombok.*;
 
-import javax.persistence.*;
-import java.util.Date;
 
 
-@Entity
-@Table(name = "weather_tb")
 @Getter @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Weather {
-    @Id
-    @Column(name = "weather_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "weather_seq")
-    private Long id;
-    @Column(unique = true)
-    private String region ;
+public class WeatherDto {
+
+
+    private long id;
+
+    private String region;
 
     private int weatherDate;
 
@@ -33,24 +31,8 @@ public class Weather {
     private int afternoonRainPercent;
 
     private String afternoonWeatherCondition;
-
-
-
-
-
-    private Date regDate;
-
-
-
-
-    @PrePersist // DB에 INSERT 되기 전에 실행되는 메소드
-    public void prePersist() {
-        regDate = new Date();
-    }
-
-
-    public WeatherDto toDto() {
-        return WeatherDto.builder()
+    public Weather toEntity() {
+        return Weather.builder()
                 .region(this.getRegion())
                 .weatherDate(this.getWeatherDate())
                 .morningTemperature(this.getMorningTemperature())
@@ -61,5 +43,4 @@ public class Weather {
                 .afternoonWeatherCondition(this.getAfternoonWeatherCondition())
                 .build();
     }
-
 }
