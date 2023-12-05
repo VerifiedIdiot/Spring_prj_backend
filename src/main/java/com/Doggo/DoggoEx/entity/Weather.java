@@ -17,7 +17,7 @@ public class Weather {
     @Column(name = "weather_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "weather_seq")
     private Long id;
-    @Column(unique = true)
+//    @Column(unique = true)
     private String region ;
 
     private int weatherDate;
