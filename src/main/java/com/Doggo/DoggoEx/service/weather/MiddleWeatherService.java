@@ -165,7 +165,7 @@ public class MiddleWeatherService extends WeatherAbstract {
                 String date = dailyTemp.get(0);
 
                 // 날짜, 최저온도, 최고온도를 리스트에 저장하고, 추가적인 날씨 정보(오전/오후 날씨 조건과 강수량)를 위한 빈 문자열을 추가합니다.
-                List<String> weatherData = new ArrayList<>(Arrays.asList(date, dailyTemp.get(1), dailyTemp.get(2), "", "", "", ""));
+                List<String> weatherData = new ArrayList<>(Arrays.asList(date, dailyTemp.get(1), "", "", dailyTemp.get(2), "", ""));
                 cityWeatherMap.put(date, weatherData);
             }
 
@@ -198,12 +198,13 @@ public class MiddleWeatherService extends WeatherAbstract {
                                 // 오전 데이터 (0000 시) 또는 오후 데이터 (1200 시)에 따라 날씨 조건과 강수량을 추가합니다.
                                 if (time.equals("0000")) {
                                     // 오전 날씨 조건과 강수량을 설정합니다.
+                                    dayAndNightCondition.set(2, dailyCondition.get(2)); // 오전 강수량
                                     dayAndNightCondition.set(3, dailyCondition.get(1)); // 오전 날씨 조건
-                                    dayAndNightCondition.set(4, dailyCondition.get(2)); // 오전 강수량
                                 } else if (time.equals("1200")) {
                                     // 오후 날씨 조건과 강수량을 설정합니다.
-                                    dayAndNightCondition.set(5, dailyCondition.get(1)); // 오후 날씨 조건
-                                    dayAndNightCondition.set(6, dailyCondition.get(2)); // 오후 강수량
+
+                                    dayAndNightCondition.set(5, dailyCondition.get(2)); // 오후 강수량
+                                    dayAndNightCondition.set(6, dailyCondition.get(1)); // 오후 날씨 조건
                                 }
                             }
                         }

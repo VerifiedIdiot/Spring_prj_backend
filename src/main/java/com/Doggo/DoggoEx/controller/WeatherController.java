@@ -31,31 +31,34 @@ public class WeatherController {
         this.weatherDataSaveService = weatherDataSaveService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<?> getForcasts() {
-        try {
-            // 지역별 코드
-            Map<String, String> locationCode = shortWeatherService.getLocationCode();
 
-            // 단기예보
-            Map<String, List<List<String>>> completeShort = shortWeatherService.completeShort(locationCode);
 
-            // 중기예보
-            Map<String, List<List<String>>> middleTemp = middleWeatherService.getMiddleTemp(locationCode);
-            Map<String, List<List<String>>> middleCondition = middleWeatherService.getMiddleCondition(locationCode);
-            Map<String, List<List<String>>> completeMiddle = middleWeatherService.getCompleteMiddle(middleTemp,middleCondition);
-
-            // 단기예보 + 중기예보
-            Map<String, List<List<String>>> completeWeather = completeWeatherService.getCompleteWeather(completeShort, completeMiddle);
-
-            // 각 도시별 일주일 날씨 정보 db에 insert
+    // 스케쥴러 구현으로 인해 필요없어졌으나 , 테스트를 위해 남겨둠 , 고로 주석처리
+//    @PostMapping("/insert")
+//    public ResponseEntity<?> getForcasts() {
+//        try {
+//            // 지역별 코드
+//            Map<String, String> locationCode = shortWeatherService.getLocationCode();
+//
+//            // 단기예보
+//            Map<String, List<List<String>>> completeShort = shortWeatherService.completeShort(locationCode);
+//
+//            // 중기예보
+//            Map<String, List<List<String>>> middleTemp = middleWeatherService.getMiddleTemp(locationCode);
+//            Map<String, List<List<String>>> middleCondition = middleWeatherService.getMiddleCondition(locationCode);
+//            Map<String, List<List<String>>> completeMiddle = middleWeatherService.getCompleteMiddle(middleTemp,middleCondition);
+//
+//            // 단기예보 + 중기예보
+//            Map<String, List<List<String>>> completeWeather = completeWeatherService.getCompleteWeather(completeShort, completeMiddle);
+//
+//            // 각 도시별 일주일 날씨 정보 db에 insert
 //            weatherDataSaveService.saveWeatherData(completeWeather);
-
-            return ResponseEntity.ok(completeWeather);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-
-    }
+//
+//            return ResponseEntity.ok(completeWeather);
+//        } catch (Exception e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//    }
 
 }
