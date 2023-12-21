@@ -1,4 +1,4 @@
-package com.Doggo.DoggoEx.service;
+package com.Doggo.DoggoEx.service.animals;
 
 
 import com.Doggo.DoggoEx.dto.DogDto;
@@ -6,8 +6,8 @@ import com.Doggo.DoggoEx.entity.AnimalType;
 import com.Doggo.DoggoEx.entity.Dog;
 import com.Doggo.DoggoEx.repository.AnimalTypeRepository;
 import com.Doggo.DoggoEx.repository.DogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -23,6 +23,8 @@ public class DogService {
     private final AnimalTypeRepository animalTypeRepository;
     private final RestTemplate restTemplate;
 
+    private final EngToKorService engToKorService;
+
     @Value("${api.dog.url}")
     private String apiUrl;
 
@@ -31,9 +33,10 @@ public class DogService {
 
     // 생성자를 통한 DogRepository 주입 및 RestTemplate 초기화
 
-    public DogService(DogRepository dogRepository, AnimalTypeRepository animalTypeRepository) {
+    public DogService(DogRepository dogRepository, AnimalTypeRepository animalTypeRepository, EngToKorService engToKorService) {
         this.dogRepository = dogRepository;
         this.animalTypeRepository = animalTypeRepository;
+        this.engToKorService = engToKorService;
         this.restTemplate = new RestTemplate();
     }
 
@@ -93,8 +96,8 @@ public class DogService {
                 } else {
                     // 응답 배열을 순회하면서 각 `DogDto` 객체를 `Dog` 엔티티로 변환하고 저장합니다.
                     for (DogDto dogDto : response) {
-                        // DogDto 객체를 Dog 엔티티로 매핑하는 메서드를 호출합니다.
-                        Dog dog = mapToDogEntity(dogDto, dogType);
+                        DogDto korDogDto = engToKorService.dogToKor(dogDto);
+                        Dog dog = mapToDogEntity(korDogDto, dogType);
                         // 변환된 Dog 엔티티를 리포지토리를 통해 데이터베이스에 저장합니다.
                         dogRepository.save(dog);
                         // 저장된 강아지 정보를 콘솔에 출력합니다.
@@ -110,18 +113,22 @@ public class DogService {
 
 
     // 견종 이름으로 검색
-    public DogDto getDogByName(String name) {
+    public DogDto getDogByName(String koreanName) {
         // 이름으로 Dog 엔티티를 조회하고, 결과가 없으면 예외 발생
-        Dog dog = dogRepository.findByName(name).orElseThrow(
+        Dog dog = dogRepository.findByKoreanName(koreanName).orElseThrow(
                 () -> new RuntimeException("해당 견종이 존재하지 않습니다.")
         );
         // 조회된 Dog 엔티티를 DogDto로 변환하여 반환
         return entityToDogDto(dog);
     }
 
-    // 견종 가나다 순으로 정렬
-    public List<DogDto> getDogsSortedByKoreanName() {
-        return dogRepository.findAllByOrderByNameAsc();
+//     견종 가나다 순으로 정렬
+    public List<DogDto> getDogsSortedByKoreanName(Pageable pageable) {
+        return dogRepository.findAllByOrderByNameAsc(pageable);
+    }
+
+    public List<DogDto> getDogsSortedByKeyword(String keyword) {
+        return dogRepository.findByKeyword(keyword);
     }
 
 }

@@ -27,9 +27,12 @@ public class CatDto {
     private String name;
 
     @JsonView(Views.Public.class)
+    @JsonProperty("korean_name")
+    private String koreanName;
+
+    @JsonView(Views.Public.class)
     @JsonProperty("image_link")
     private String imageLink;
-
 
     @JsonProperty("family_friendly")
     private int familyFriendly;
@@ -58,6 +61,8 @@ public class CatDto {
     @JsonProperty("grooming")
     private int grooming;
 
+    @JsonProperty("meowing")
+    private int meowing;
 
     @JsonProperty("intelligence")
     private int intelligence;
@@ -93,9 +98,10 @@ public class CatDto {
     private AnimalType animalType;
 
     // @Query 어노테이션과 조합하기 위해서는 빌더가 아닌 생성자가 필요하다더라....
-    public CatDto(Long id, String name, String imageLink) {
+    public CatDto(Long id, String name,String koreanName, String imageLink) {
         this.id = id;
         this.name = name;
+        this.koreanName = koreanName;
         this.imageLink = imageLink;
 
     }
@@ -106,23 +112,25 @@ public class CatDto {
     public Cat toEntity() {
         return Cat.builder()
                 .name(this.getName())
+                .koreanName(this.getKoreanName())
                 .animalTypeId(this.getAnimalType())
                 .imageLink(this.getImageLink())
                 .origin((this.getOrigin()))
                 .length(this.getLength())
-                .intelligence(this.getIntelligence())
-                .familyFriendly(this.getFamilyFriendly())
-                .childrenFriendly(this.getChildrenFriendly())
-                .strangerFriendly(this.getStrangerFriendly())
-                .otherPetsFriendly(this.getOtherPetsFriendly())
-                .shedding(this.getShedding())
-                .grooming(this.getGrooming())
-                .generalHealth(this.getGeneralHealth())
-                .playfulness(this.getPlayfulness())
+                .intelligence(this.getIntelligence() == 0 ? 1 : this.getIntelligence())
+                .familyFriendly(this.getFamilyFriendly() == 0 ? 1 : this.getFamilyFriendly())
+                .childrenFriendly(this.getChildrenFriendly() == 0 ? 1 : this.getChildrenFriendly())
+                .strangerFriendly(this.getStrangerFriendly() == 0 ? 1 : this.getStrangerFriendly())
+                .otherPetsFriendly(this.getOtherPetsFriendly() == 0 ? 1 : this.getOtherPetsFriendly())
+                .shedding(this.getShedding() == 0 ? 1 : this.getShedding())
+                .grooming(this.getGrooming() == 0 ? 1 : this.getGrooming())
+                .meowing(this.getMeowing() == 0 ? 1 : this.getMeowing())
+                .generalHealth(this.getGeneralHealth() == 0 ? 1 : this.getGeneralHealth())
+                .playfulness(this.getPlayfulness() == 0 ? 1 : this.getPlayfulness())
                 .minWeight(this.getMinWeight())
                 .maxWeight(this.getMaxWeight())
-                .minWeight(this.getMinWeight())
-                .maxWeight(this.getMaxWeight())
+                .minLifeExpectancy(this.getMinLifeExpectancy())
+                .maxLifeExpectancy(this.getMaxLifeExpectancy())
                 .build();
     }
 }

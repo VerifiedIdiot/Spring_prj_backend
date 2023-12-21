@@ -25,7 +25,7 @@ public class WeatherDataSaveService {
     public void deleteAllWeatherData() {
         weatherRepository.deleteAll();
     }
-
+    
     @Transactional
     public void saveWeatherData(Map<String, List<List<String>>> weatherData) {
         try {
@@ -55,7 +55,7 @@ public class WeatherDataSaveService {
                 }
 
             }
-            System.out.println("중기예보 insert 성공");
+            System.out.println("단기 + 중기 예보 insert 성공");
         } catch (Exception e) {
             // 예외 처리 및 로그 출력
             System.err.println("Error saving weather data: " + e.getMessage());

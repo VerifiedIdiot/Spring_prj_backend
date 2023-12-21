@@ -26,6 +26,7 @@ public class Member {
     private String  memberEmail;
     @Column(nullable = false)
     private String  memberPassword;
+    @Column(length = 2048)
     private String memberImage;
     private String memberTel;
     private String memberGender;
@@ -39,9 +40,9 @@ public class Member {
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<Diary> diarys;
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
-    private List<Quest> quests;
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<PetProfile> petProfiles;
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    private List<Board> board;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;

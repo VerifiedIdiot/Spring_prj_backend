@@ -1,4 +1,4 @@
-package com.Doggo.DoggoEx.service;
+package com.Doggo.DoggoEx.service.animals;
 
 import com.Doggo.DoggoEx.dto.CatDto;
 import com.Doggo.DoggoEx.dto.DogDto;
@@ -12,15 +12,16 @@ public class EngToKorService {
 
     public DogDto dogToKor(DogDto dogDto) {
         // DogDto에서 받고있는 영문 이름을 한국어로 변환
+        // 첫번째 매개변수dogDto.getName에서  dogNameMapping 에서 정의한 이름과 똒~같으면  static하기 지정한 디폴트값 (한글명) 반환
         String koreanName = dogNameMapping.getOrDefault(dogDto.getName(), dogDto.getName());
-        dogDto.setName(koreanName);
+        dogDto.setKoreanName(koreanName);
         return dogDto;
     }
 
     public CatDto catToKor(CatDto catDto) {
-        // DogDto에서 받고있는 영문 이름을 한국어로 변환
+        // CatDto에서 받고있는 영문 이름을 한국어로 변환
         String koreanName = catNameMapping.getOrDefault(catDto.getName(), catDto.getName());
-        catDto.setName(koreanName);
+        catDto.setKoreanName(koreanName);
         return catDto;
     }
     // 수동으로 변환한 견종명들 , 고유명사라서 정확도 이슈로 직접함 , 건들면 으르렁
@@ -324,7 +325,7 @@ public class EngToKorService {
         catNameMapping.put("Lykoi", "라이코이");
         catNameMapping.put("Napoleon", "나폴레옹");
         catNameMapping.put("Nebelung", "네벨룽");
-        catNameMapping.put("Norwegian Forest", "노르웨이지안 포레스트");
+        catNameMapping.put("Norwegian Forest", "노르웨이안 포레스트");
         catNameMapping.put("Persian", "페르시안");
         catNameMapping.put("Peterbald", "피터볼드");
         catNameMapping.put("Pixie-Bob", "픽시 밥");

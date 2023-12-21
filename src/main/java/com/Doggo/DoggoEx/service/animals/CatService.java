@@ -1,13 +1,13 @@
-package com.Doggo.DoggoEx.service;
+package com.Doggo.DoggoEx.service.animals;
 
 import com.Doggo.DoggoEx.dto.CatDto;
-
+import com.Doggo.DoggoEx.dto.DogDto;
 import com.Doggo.DoggoEx.entity.AnimalType;
 import com.Doggo.DoggoEx.entity.Cat;
 import com.Doggo.DoggoEx.repository.AnimalTypeRepository;
 import com.Doggo.DoggoEx.repository.CatRepository;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +22,7 @@ public class CatService {
     private final AnimalTypeRepository animalTypeRepository;
     private final RestTemplate restTemplate;
 
+    private final EngToKorService engToKorService;
 
 
     @Value("${api.cat.url}")
@@ -33,9 +34,10 @@ public class CatService {
 
     // 생성자를 통한 CatRepository 주입 및 RestTemplate 초기화
 
-    public CatService(CatRepository catRepository, AnimalTypeRepository animalTypeRepository) { // 여기에 AnimalTypeRepository를 주입합니다.
+    public CatService(CatRepository catRepository, AnimalTypeRepository animalTypeRepository, EngToKorService engToKorService) { // 여기에 AnimalTypeRepository를 주입합니다.
         this.catRepository = catRepository;
         this.animalTypeRepository = animalTypeRepository; // 이 라인을 추가해야 합니다.
+        this.engToKorService = engToKorService;
         this.restTemplate = new RestTemplate();
     }
     // INSERT되는 각 레코드마다 AnimalType에서 받는 외래키 컬럼의 값을 할당하는 메서드
@@ -85,7 +87,8 @@ public class CatService {
                     moreData = false;
                 } else {
                     for (CatDto catDto : response) {
-                        Cat cat = mapToCatEntity(catDto, catType);
+                        CatDto korCatDto = engToKorService.catToKor(catDto);
+                        Cat cat = mapToCatEntity(korCatDto, catType);
                         catRepository.save(cat);
                         System.out.println("kitten!! : " + cat);
                     }
@@ -97,17 +100,24 @@ public class CatService {
 
 
 
+
+
+
     // 묘종 이름으로 검색
-    public CatDto getCatByName(String name) {
+    public CatDto getCatByName(String koreanName) {
         // 이름으로 Cat 엔티티를 조회하고, 결과가 없으면 예외 발생
-        Cat cat = catRepository.findByName(name).orElseThrow(
+        Cat cat = catRepository.findByKoreanName(koreanName).orElseThrow(
                 () -> new RuntimeException("해당 묘종이 존재하지 않습니다.")
         );
         // 조회된 Cat 엔티티를 CatDto로 변환하여 반환
         return entityToCatDto(cat);
     }
 
-    public List<CatDto> getCatsSortedByKoreanName() {
-        return catRepository.findAllByOrderByNameAsc();
+    public List<CatDto> getCatsSortedByKoreanName(Pageable pageable) {
+        return catRepository.findAllByOrderByNameAsc(pageable);
+    }
+
+    public List<CatDto> getCatsSortedByKeyword(String keyword) {
+        return catRepository.findByKeyword(keyword);
     }
 }

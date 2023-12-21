@@ -1,17 +1,26 @@
 package com.Doggo.DoggoEx.entity;
 import com.Doggo.DoggoEx.enums.SalesType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "sale")
+@Getter @Setter @ToString
+@NoArgsConstructor
 public class Sale {
 
     @Id
     @Column(name = "sales_num")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id; //구매 넘버
+
+    @Column(name = "sales_name")
+    private String salesName; //상품명
 
     @Column(name = "sales_price")
     private Integer salesPrice; //구매 가격
@@ -32,17 +41,23 @@ public class Sale {
     private SalesType salesType; //구매종류
 
     @Column(name = "sales_regdate")
-    private LocalDateTime salesRegDate; // 구매일자
+    private LocalDate salesRegDate; // 구매일자
 
     @Column(name = "sales_delivery")
-    private LocalDateTime salesDelivery; //배송일자
+    private LocalDate salesDelivery; //배송일자
 
     @Column(name = "sales_autodelivery")
     private Integer salesAutoDelivery; //정기 배송일자 10일이면>>10으로표시
 
     @PrePersist
     public void prePersist() {
-        salesRegDate = LocalDateTime.now();
+        salesRegDate = LocalDate.now();
     }
+
+    @Column(name = "order_status")
+    private String orderStatus;
+
+    @Column(name = "invoice_Num")
+    private Integer invoice;
 
 }
