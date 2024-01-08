@@ -1,11 +1,11 @@
 package com.Doggo.DoggoEx.service;
 
-import com.Doggo.DoggoEx.dto.BoardDto;
 import com.Doggo.DoggoEx.dto.FeedDto;
-import com.Doggo.DoggoEx.entity.Board;
 import com.Doggo.DoggoEx.entity.Feed;
+import com.Doggo.DoggoEx.enums.FeedType;
 import com.Doggo.DoggoEx.repository.FeedRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -65,9 +65,17 @@ public class AdminFeedService {
     }
 
     // 페이지네이션
-    public List<FeedDto> getFeedList(int page, int size) {
+    public List<FeedDto> getFeedList(int page, int size, FeedType filter) {
         Pageable pageable = PageRequest.of(page, size);
-        List<Feed> feeds = feedRepository.findAll(pageable).getContent();
+        Page<Feed> feedPage;
+        if (filter.toString() == "ALL" || filter == null ) {
+            // 필터가 "all"이거나 비어있는 경우 모든 데이터를 가져옴
+            feedPage = feedRepository.findAll(pageable);
+        } else {
+            // 특정 필터 조건에 맞는 데이터를 가져옴 (부분 일치 검색)
+            feedPage = feedRepository.findByFeedType(filter, pageable);
+        }
+        List<Feed> feeds = feedPage.getContent();
         List<FeedDto> feedDtos = new ArrayList<>();
         for(Feed feed : feeds) {
             feedDtos.add(feedService.convertEntityToDto(feed));
@@ -75,7 +83,14 @@ public class AdminFeedService {
         return feedDtos;
     }
     // 페이지 수 계산
-    public int getFeedPage(Pageable pageable) {
-        return feedRepository.findAll(pageable).getTotalPages();
+    public int getFeedPage(Pageable pageable, FeedType filter) {
+        Page<Feed> feedPage;
+        if (filter.toString() == "ALL" || filter == null ) {
+            feedPage = feedRepository.findAll(pageable);
+        } else {
+            feedPage = feedRepository.findByFeedType(filter, pageable);
+        }
+
+        return feedPage.getTotalPages();
     }
 }
